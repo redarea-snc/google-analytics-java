@@ -16,16 +16,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import com.brsanthu.googleanalytics.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.brsanthu.googleanalytics.GoogleAnalytics;
-import com.brsanthu.googleanalytics.GoogleAnalyticsConfig;
-import com.brsanthu.googleanalytics.GoogleAnalyticsExecutor;
-import com.brsanthu.googleanalytics.GoogleAnalyticsStats;
 import com.brsanthu.googleanalytics.httpclient.HttpBatchRequest;
 import com.brsanthu.googleanalytics.httpclient.HttpClient;
 import com.brsanthu.googleanalytics.httpclient.HttpRequest;
@@ -83,12 +81,19 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
     }
 
     @Override
-    public Future<GoogleAnalyticsResponse> postAsync(GoogleAnalyticsRequest<?> request) {
+    public Future<GoogleAnalyticsResponse> postAsync(final GoogleAnalyticsRequest<?> request) {
         if (!config.isEnabled()) {
             return null;
         }
+//        return executor.submit(() -> post(request));
 
-        return executor.submit(() -> post(request));
+        return executor.submit(new Callable<GoogleAnalyticsResponse>() {
+            @Override
+            public GoogleAnalyticsResponse call() throws Exception {
+                return post(request);
+            }
+        });
+
     }
 
     @Override
@@ -384,4 +389,8 @@ public class GoogleAnalyticsImpl implements GoogleAnalytics, GoogleAnalyticsExec
         submitBatch(true);
     }
 
+    @Override
+    public GoogleAnalyticsBuilder builder() {
+        return new GoogleAnalyticsBuilder();
+    }
 }

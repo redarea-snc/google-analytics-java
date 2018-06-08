@@ -67,3 +67,6 @@ nohup.out
 core-search-service
 core-dns-service
 /.gitignore
+
+#--Rut - 07/06/2018 - specifico per nostro lavoro
+temp/

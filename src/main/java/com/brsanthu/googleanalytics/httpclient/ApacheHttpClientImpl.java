@@ -7,7 +7,7 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -88,7 +88,11 @@ public class ApacheHttpClientImpl implements HttpClient {
 
     protected List<NameValuePair> createNameValuePairs(HttpRequest req) {
         List<NameValuePair> parmas = new ArrayList<>();
-        req.getBodyParams().forEach((key, value) -> parmas.add(new BasicNameValuePair(key, value)));
+        Map<String, String> bodyParams =  req.getBodyParams();
+        for(Map.Entry<String, String> entry : bodyParams.entrySet()){
+            parmas.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+        }
+//        req.getBodyParams().forEach((key, value) -> parmas.add(new BasicNameValuePair(key, value)));
         return parmas;
     }
 
@@ -127,7 +131,12 @@ public class ApacheHttpClientImpl implements HttpClient {
         CloseableHttpResponse httpResp = null;
 
         try {
-            List<List<NameValuePair>> listOfReqPairs = req.getRequests().stream().map(this::createNameValuePairs).collect(Collectors.toList());
+            List<List<NameValuePair>> listOfReqPairs = new ArrayList<List<NameValuePair>>();
+            for(HttpRequest request: req.getRequests()){
+                List<NameValuePair> nameValuePairs = createNameValuePairs(request);
+                listOfReqPairs.add(nameValuePairs);
+            }
+//            List<List<NameValuePair>> listOfReqPairs = req.getRequests().stream().map(this::createNameValuePairs).collect(Collectors.toList());
             httpResp = execute(req.getUrl(), new BatchUrlEncodedFormEntity(listOfReqPairs));
             resp.setStatusCode(httpResp.getStatusLine().getStatusCode());
 

@@ -16,7 +16,8 @@ public class GoogleAnalyticsTest {
 
     @BeforeClass
     public static void setup() {
-        ga = GoogleAnalytics.builder().withTrackingId(TEST_TRACKING_ID).withAppName("Junit Test").withAppVersion("1.0.0").build();
+//        ga = GoogleAnalytics.builder().withTrackingId(TEST_TRACKING_ID).withAppName("Junit Test").withAppVersion("1.0.0").build();
+        ga = new GoogleAnalyticsBuilder().withTrackingId(TEST_TRACKING_ID).withAppName("Junit Test").withAppVersion("1.0.0").build();
     }
 
     @Test
@@ -68,7 +69,8 @@ public class GoogleAnalyticsTest {
         defaultRequest.customDimension(5, "bar");
 
         // Local ga
-        GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
+//        GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
+        GoogleAnalytics lga = new GoogleAnalyticsBuilder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
 
         GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").customDimension(2, "bob").customDimension(5, "alice")
                 .send();
@@ -84,7 +86,8 @@ public class GoogleAnalyticsTest {
         defaultRequest.customMetric(1, "foo");
         defaultRequest.customMetric(5, "bar");
 
-        GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
+//        GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
+        GoogleAnalytics lga = new GoogleAnalyticsBuilder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
 
         GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").customMetric(2, "bob").customMetric(5, "alice").send();
 
@@ -99,7 +102,8 @@ public class GoogleAnalyticsTest {
         defaultRequest.userIp("1.2.3.4");
         defaultRequest.userAgent("Opera/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14");
 
-        GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
+//        GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
+        GoogleAnalytics lga = new GoogleAnalyticsBuilder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
 
         GoogleAnalyticsResponse response = lga.pageView("http://www.google.com", "Search").userIp("1.2.3.5")
                 .userAgent("Chrome/9.80 (Windows NT 6.0) Presto/2.12.388 Version/12.14").send();
@@ -117,7 +121,8 @@ public class GoogleAnalyticsTest {
         defaultRequest.clientId("1234");
         defaultRequest.userId("user1");
 
-        GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
+//        GoogleAnalytics lga = GoogleAnalytics.builder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
+        GoogleAnalytics lga = new GoogleAnalyticsBuilder().withDefaultRequest(defaultRequest).withTrackingId(TEST_TRACKING_ID).build();
 
         response = lga.pageView("http://www.google.com", "Search").send();
         assertEquals("1234", response.getRequestParams().get("cid"));

@@ -55,7 +55,6 @@ import static com.brsanthu.googleanalytics.request.GoogleAnalyticsParameter.VIEW
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
-import java.util.function.Supplier;
 
 import com.brsanthu.googleanalytics.GoogleAnalyticsExecutor;
 import com.brsanthu.googleanalytics.internal.Constants;
@@ -1860,12 +1859,39 @@ public class GoogleAnalyticsRequest<T> {
         return getString(GoogleAnalyticsParameter.GEOID);
     }
 
+    public interface Supplier<T> {
+
+        /**
+         * Gets a result.
+         *
+         * @return a result
+         */
+        T get();
+    }
+
     public GoogleAnalyticsResponse send() {
-        return execute(() -> delegateExecutor.post(this));
+        final GoogleAnalyticsRequest refThis = this;
+
+        return execute(new Supplier<GoogleAnalyticsResponse>() {
+            @Override
+            public GoogleAnalyticsResponse get() {
+                return delegateExecutor.post(refThis);
+            }
+        });
+
+//        return execute(() -> delegateExecutor.post(this));
     }
 
     public Future<GoogleAnalyticsResponse> sendAsync() {
-        return execute(() -> delegateExecutor.postAsync(this));
+        final GoogleAnalyticsRequest refThis = this;
+
+        return execute(new Supplier<Future<GoogleAnalyticsResponse>>() {
+            @Override
+            public Future<GoogleAnalyticsResponse> get() {
+                return delegateExecutor.postAsync(refThis);
+            }
+        });
+        //return execute(() -> delegateExecutor.postAsync(this));
     }
 
     private <E> E execute(Supplier<E> call) {

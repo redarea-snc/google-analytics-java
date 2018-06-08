@@ -43,9 +43,10 @@ public interface GoogleAnalytics extends AutoCloseable {
 
     void resetStats();
 
-    static GoogleAnalyticsBuilder builder() {
-        return new GoogleAnalyticsBuilder();
-    }
+    GoogleAnalyticsBuilder builder();
+//    GoogleAnalyticsBuilder builder() {
+//        return new GoogleAnalyticsBuilder();
+//    }
 
     void flush();
 }
